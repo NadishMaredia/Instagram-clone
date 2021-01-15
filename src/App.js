@@ -62,7 +62,7 @@ function App() {
 
   // USEEFFECT Runs a code based on some condition
   useEffect(() => {
-    db.collection('posts').onSnapshot(snapshot => {
+    db.collection('posts').orderBy('timestamp','desc').onSnapshot(snapshot => {
       setPosts(snapshot.docs.map(doc => ({
         id: doc.id,
         post: doc.data()
@@ -97,13 +97,6 @@ function App() {
 
   return (
     <div className="app">
-
-      {/* Upload Post */}
-      {user ? (
-        <ImageUpload username={user.email} />
-      ) : (
-        <h3>Sorry you need to login to upload</h3>
-      )}
 
       <Modal
         open={open}
@@ -174,9 +167,7 @@ function App() {
         height="40px"
         alt="abc" 
         src="https://e7.pngegg.com/pngimages/712/1009/png-clipart-letter-instagram-font-instagram-text-logo.png"></img>
-      </div>      
-
-      {
+        {
         user ? (
           <Button onClick={() => auth.signOut()}>Log out</Button>
         ): (
@@ -185,8 +176,12 @@ function App() {
             <Button onClick={() => setOpen(true)}>Sign Up</Button>
           </div>
         )}
+      </div>      
+
+      
       
       <h1>Hello World</h1>
+      {/* Posts */}
       {
         posts.map(({id, post}) => (
           <Post
@@ -196,8 +191,15 @@ function App() {
             imageUrl={post.imageUrl} />
         ))
       }
-      {/* Posts */}
       
+      
+
+      {/* Upload Post */}
+      {user ? (
+        <ImageUpload username={user.email} />
+      ) : (
+        <h3>Sorry you need to login to upload</h3>
+      )}
      
     </div>
   );
